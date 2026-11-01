@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Manage Orders')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div th:replace="~{fragments :: flash}"></div>
+<div class="container">
+    <h1>All orders</h1>
+    <div class="panel" th:if="${#lists.isEmpty(orders)}">No orders yet.</div>
+    <table th:unless="${#lists.isEmpty(orders)}">
+        <thead><tr><th>Order</th><th>Customer</th><th>Date</th><th>Total</th><th>Status</th></tr></thead>
+        <tbody>
+        <tr th:each="o : ${orders}">
+            <td><a th:href="@{/orders/{id}(id=${o.id})}" th:text="'#' + ${o.id}"></a></td>
+            <td th:text="${o.user.email}"></td>
+            <td th:text="${#temporals.format(o.createdAt,'dd MMM yyyy HH:mm')}"></td>
+            <td th:text="'₹' + ${#numbers.formatDecimal(o.total,1,'COMMA',2,'POINT')}"></td>
+            <td>
+                <form th:action="@{/admin/orders/{id}/status(id=${o.id})}" method="post">
+                    <select name="status">
+                        <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}" th:selected="${s == o.status}"></option>
+                    </select>
+                    <button class="btn small" type="submit">Update</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

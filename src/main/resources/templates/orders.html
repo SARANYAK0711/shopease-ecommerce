@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('My Orders')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div th:replace="~{fragments :: flash}"></div>
+<div class="container">
+    <h1>My orders</h1>
+    <div class="panel" th:if="${#lists.isEmpty(orders)}">You have not placed any orders yet.</div>
+    <table th:unless="${#lists.isEmpty(orders)}">
+        <thead><tr><th>Order</th><th>Date</th><th>Total</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+        <tr th:each="o : ${orders}">
+            <td th:text="'#' + ${o.id}"></td>
+            <td th:text="${#temporals.format(o.createdAt,'dd MMM yyyy HH:mm')}"></td>
+            <td th:text="'₹' + ${#numbers.formatDecimal(o.total,1,'COMMA',2,'POINT')}"></td>
+            <td><span class="status" th:classappend="${o.status}" th:text="${o.status}"></span></td>
+            <td><a th:href="@{/orders/{id}(id=${o.id})}">View</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

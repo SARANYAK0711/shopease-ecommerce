@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Product')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div class="container">
+    <div class="panel form">
+        <h1 th:text="${product.id == null} ? 'Add product' : 'Edit product'">Product</h1>
+        <form th:action="@{/admin/products}" th:object="${product}" method="post">
+            <input type="hidden" th:field="*{id}">
+            <label>Name</label>
+            <input type="text" th:field="*{name}">
+            <div class="field-err" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+            <label>Description</label>
+            <textarea rows="4" th:field="*{description}"></textarea>
+            <label>Price (₹)</label>
+            <input type="number" step="0.01" th:field="*{price}">
+            <div class="field-err" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+            <label>Stock</label>
+            <input type="number" th:field="*{stock}">
+            <div class="field-err" th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}"></div>
+            <label>Category</label>
+            <input type="text" th:field="*{category}">
+            <label>Image URL</label>
+            <input type="text" th:field="*{imageUrl}">
+            <button class="btn" type="submit">Save</button>
+        </form>
+        <p><a th:href="@{/admin/products}">← Back</a></p>
+    </div>
+</div>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

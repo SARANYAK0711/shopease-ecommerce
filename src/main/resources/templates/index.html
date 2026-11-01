@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Home')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div th:replace="~{fragments :: flash}"></div>
+<div class="container">
+    <form class="filters" method="get" th:action="@{/}">
+        <input type="text" name="q" th:value="${q}" placeholder="Search products...">
+        <select name="category">
+            <option value="">All categories</option>
+            <option th:each="c : ${categories}" th:value="${c}" th:text="${c}" th:selected="${c == selectedCategory}"></option>
+        </select>
+        <button class="btn" type="submit">Search</button>
+        <a class="btn secondary" th:href="@{/}">Reset</a>
+    </form>
+    <p class="muted" th:if="${#lists.isEmpty(products)}">No products found.</p>
+    <div class="grid">
+        <div class="card" th:each="p : ${products}">
+            <a th:href="@{/products/{id}(id=${p.id})}"><img th:src="${p.imageUrl}" th:alt="${p.name}"></a>
+            <div class="body">
+                <span class="cat" th:text="${p.category}">Category</span>
+                <a th:href="@{/products/{id}(id=${p.id})}"><strong th:text="${p.name}">Name</strong></a>
+                <span class="price" th:text="'₹' + ${#numbers.formatDecimal(p.price,1,'COMMA',2,'POINT')}">₹0</span>
+                <span class="muted" th:if="${p.stock == 0}">Out of stock</span>
+                <form th:if="${p.stock > 0}" th:action="@{/cart/add}" method="post" style="margin-top:auto">
+                    <input type="hidden" name="productId" th:value="${p.id}">
+                    <button class="btn" type="submit">Add to cart</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

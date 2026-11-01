@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(${product.name})}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div th:replace="~{fragments :: flash}"></div>
+<div class="container">
+    <div class="panel detail">
+        <img th:src="${product.imageUrl}" th:alt="${product.name}">
+        <div>
+            <span class="muted" th:text="${product.category}">Category</span>
+            <h1 th:text="${product.name}">Name</h1>
+            <p class="price" style="font-size:1.6rem" th:text="'₹' + ${#numbers.formatDecimal(product.price,1,'COMMA',2,'POINT')}">₹0</p>
+            <p th:text="${product.description}">Description</p>
+            <p th:if="${product.stock > 0}" class="muted" th:text="${product.stock} + ' in stock'"></p>
+            <p th:if="${product.stock == 0}" style="color:var(--danger)">Out of stock</p>
+            <form th:if="${product.stock > 0}" th:action="@{/cart/add}" method="post">
+                <input type="hidden" name="productId" th:value="${product.id}">
+                <input class="qty" type="number" name="quantity" value="1" min="1" th:max="${product.stock}">
+                <button class="btn" type="submit">Add to cart</button>
+            </form>
+            <p><a th:href="@{/}">← Back to products</a></p>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

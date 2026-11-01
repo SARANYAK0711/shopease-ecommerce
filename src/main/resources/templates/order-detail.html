@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Order')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div class="container">
+    <div class="alert ok" th:if="${param.placed}">🎉 Thank you! Your order has been placed.</div>
+    <div class="row">
+        <h1 style="margin:0" th:text="'Order #' + ${order.id}">Order</h1>
+        <span class="status" th:classappend="${order.status}" th:text="${order.status}"></span>
+    </div>
+    <div class="panel" style="margin-bottom:16px">
+        <p><strong>Placed:</strong> <span th:text="${#temporals.format(order.createdAt,'dd MMM yyyy HH:mm')}"></span></p>
+        <p><strong>Ship to:</strong> <span th:text="${order.shippingAddress}"></span></p>
+        <p><strong>Payment:</strong> <span th:text="${order.paymentMethod}"></span></p>
+    </div>
+    <table>
+        <thead><tr><th>Product</th><th>Unit price</th><th>Qty</th><th>Subtotal</th></tr></thead>
+        <tbody>
+        <tr th:each="i : ${order.items}">
+            <td th:text="${i.productName}"></td>
+            <td th:text="'₹' + ${#numbers.formatDecimal(i.unitPrice,1,'COMMA',2,'POINT')}"></td>
+            <td th:text="${i.quantity}"></td>
+            <td th:text="'₹' + ${#numbers.formatDecimal(i.subtotal,1,'COMMA',2,'POINT')}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <p class="total">Total: <strong th:text="'₹' + ${#numbers.formatDecimal(order.total,1,'COMMA',2,'POINT')}"></strong></p>
+    <a th:href="@{/orders}">← Back to my orders</a>
+</div>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

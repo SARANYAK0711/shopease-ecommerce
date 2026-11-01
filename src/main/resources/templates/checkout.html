@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Checkout')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div th:replace="~{fragments :: flash}"></div>
+<div class="container">
+    <h1>Checkout</h1>
+    <table>
+        <thead><tr><th>Product</th><th>Qty</th><th>Subtotal</th></tr></thead>
+        <tbody>
+        <tr th:each="i : ${items}">
+            <td th:text="${i.product.name}"></td>
+            <td th:text="${i.quantity}"></td>
+            <td th:text="'₹' + ${#numbers.formatDecimal(i.subtotal,1,'COMMA',2,'POINT')}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <p class="total">Total: <strong th:text="'₹' + ${#numbers.formatDecimal(total,1,'COMMA',2,'POINT')}"></strong></p>
+    <div class="panel form" style="max-width:600px">
+        <form th:action="@{/checkout}" method="post">
+            <label for="address">Shipping address</label>
+            <textarea id="address" name="address" rows="3" required></textarea>
+            <label for="pm">Payment method</label>
+            <select id="pm" name="paymentMethod">
+                <option>Cash on Delivery</option>
+                <option>UPI (demo)</option>
+                <option>Credit/Debit Card (demo)</option>
+            </select>
+            <button class="btn" type="submit">Place order</button>
+        </form>
+        <p class="muted">This is a demo store — no real payment is processed.</p>
+    </div>
+</div>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>
